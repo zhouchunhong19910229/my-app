@@ -1,0 +1,2 @@
+export const newData = `{ "appId": "wxa033f083bd79132d", "timestamp": 1685173872, "nonceStr": "dWO7NVlgCs", "signature": "751bdb2900111516accaa667d307f96b718e9077", "jsApiList": ["updateAppMessageShareData", "updateTimelineShareData"] }`
+export const oldData = `[\n    {\n        name: title\n        displayName: "TAB"\n        datatype: "ARRAY"\n    }\n    {\n        name: title\n        displayName: "TAB"\n        datatype: "ARRAY"\n    }\n]`
