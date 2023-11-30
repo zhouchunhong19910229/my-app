@@ -1,4 +1,4 @@
-import ElementUI, { MessageBox } from 'element-ui';
+import { MessageBox } from 'element-ui';
 
 export function processData(data) {
     const { lines, nodes } = data;

@@ -5,7 +5,7 @@ let lastPoint = { x: 0, y: 0 }; // 用于计算diff
 // import { queryFlow, deleteFlow, addFlow } from '@/api/modules/microServiceApi.js';
 import Chart from './Chart.vue';
 import Child from './Child.vue';
-import { processData, formatNodes } from './utils';
+import { formatNodes } from './utils';
 export default {
     name: 'FlowChart',
     components: {
@@ -29,9 +29,7 @@ export default {
             selectList: [], //选中节点
             hasNotLineNodes: [],
             treeDatas: {},
-            startNode: null,
-            endNode: null,
-            treeNodeIds: []
+            endNode: null
         };
     },
     computed: {
@@ -68,15 +66,16 @@ export default {
                 type: this.type,
                 serviceVersionNo: this.versionNo
             };
-            const { data } = require('./data.json');
-            return data;
-            // return await queryFlow(params);
+            return await queryFlow(params);
         },
 
         async initChart() {
             this.x = 0;
             this.y = 0;
-            const { lines = [], listTask, listFlow, stepNodeList } = (await this.queryData()) || {};
+            // const { lines = [], listTask, listFlow, stepNodeList } = (await this.queryData()) || {};
+            const {
+                data: { lines = [], listTask, listFlow, stepNodeList }
+            } = require('./data.json');
             const nodes = listTask || stepNodeList || [];
             if (nodes?.length === 0) {
                 return;
@@ -88,14 +87,18 @@ export default {
                 t.disabled = false;
                 t.isShow = true;
             });
-            this.hasNotLineNodes = nodes.filter(
-                (t) => !lines.some((l) => [l.from, l.to].includes(t.id))
-            );
             this.startNode = nodes.find((t) => t.nodeType === '3');
             this.endNode = nodes.find((t) => t.nodeType === '4');
             this.branchNodeist = nodes.filter((t) => t.nodeType === '2');
-            // this.treeNodeIds = processData({ lines, nodes });
+            this.hasNotLineNodes = nodes.filter(
+                (t) => !lines.some((l) => [l.from, l.to].includes(t.id))
+            );
             this.treeDatas = formatNodes({ lines, nodes });
+            const { listTask: selects } = listFlow || {};
+            // if(this.isApp) {
+            //     this.selectList =
+            //         [...selects, nodes.filter((t) => ['3', '4'].includes(t.nodeType))] || [];
+            // }
             this.nodes = nodes.map((t) => {
                 const { nodeName, id } = t || {};
                 return {
@@ -143,7 +146,7 @@ export default {
                 renderMode: 'canvas',
                 // dragOptions: { cursor: 'pointer', zIndex: 2000 },
                 hoverPaintStyle: { stroke: 'red', strokeWidth: 3, cursor: 'pointer' },
-                connectorHoverStyle: { stroke: 'red', strokeWidth: 3, cursor: 'pointer' },
+                connectorHoverStyle: { stroke: 'red' },
                 maxConnections: -1
             };
         },
@@ -174,20 +177,30 @@ export default {
                     if (isFromeBranchLine) {
                         defaultConfig.anchor = ['Top', 'Bottom', 'Left', 'Right'];
                     } else if (isToBranchLine) {
-                        defaultConfig.anchor = ['Top', 'Bottom' /* , 'Left', 'Right' */];
-                        // defaultConfig.anchor = 'Continuous';
+                        defaultConfig.anchor = 'Continuous';
                     } else if (isToEndLine) {
                         defaultConfig.anchor = [
+                            // 'Left',
+                            // 'Right',
                             'Top',
-                            'Bottom'
-                            // [0.5, 1, 0.5, 0]
+                            'Bottom',
+                            [0.5, 1, 0.5, 0]
                             // [0.6, 0, 0, -1],
                             // [0.4, 1, 0, 1],
                             // [0.6, 1, 0, 1]
                         ];
+                        // defaultConfig.anchor = 'Continuous'; //动态锚点
                     } else {
-                        defaultConfig.anchor = ['Top', 'Bottom'];
+                        defaultConfig.anchor = [
+                            // 'Left',
+                            // 'Right',
+                            'Top',
+                            'Bottom'
+                            // [0.5, 0, 0, -1]
+                        ];
+                        // defaultConfig.anchor = 'Continuous'; //动态锚点
                     }
+                    // this.plumbIns.draggable(target);
                     this.plumbIns.connect({ ...line, endpoint: 'Rectangle' }, defaultConfig);
                     this.plumbIns.repaintEverything(); // 重绘
                 });
@@ -263,25 +276,12 @@ export default {
                     this.initChart();
                 });
             });
-        },
-
-        isNormalNode(nodeType) {
-            return nodeType === '1';
-        },
-        isBranchNode(nodeType) {
-            return nodeType === '2';
-        },
-        isStartNode(nodeType) {
-            return nodeType === '3';
-        },
-        isEndNode(nodeType) {
-            return nodeType === '4';
         }
     }
 };
 </script>
 <template>
-    <div ref="content" class="flow_wrap" :class="{ disabled }">
+    <div ref="content" class="flow_wrap" :class="{ disabled }" :style="style">
         <div class="tree-nodes">
             <Child
                 :node="treeDatas"
@@ -308,11 +308,11 @@ export default {
 .flow_wrap {
     display: flex;
     width: 100%;
-    // height: 100%;
+    height: 100%;
+    position: relative;
     flex-direction: column;
     user-select: none;
     overflow: auto;
-    position: relative;
     .tree-nodes {
         width: 100%;
         &.notLine {
@@ -333,7 +333,6 @@ export default {
     color: #8c8c8c;
     background: #fff;
     padding: 4px 6px;
-    font-size: 12px;
 }
 </style>
 
