@@ -4,11 +4,7 @@ const isArray = (obj) => Object.prototype.toString.call(obj) === "[object Array]
 const whiteList = ['position', 'position:left', 'position:right', 'diffKey', 'diffKey:left', 'diffKey:right', 'isUpdate', 'isEmpty'] //需要跳过校验的字段
 
 const _self = {}
-const Status = {
-      Add: 'add',
-      Delete: 'delete',
-      Update: 'update'
-}
+
 
 //替换json中的转义字符
 export const replaceChart = (obj) => {
@@ -201,10 +197,11 @@ export const displayJson = (data, element, position) => {
       endLi.innerHTML = createIndex() + "}";
       element.appendChild(endLi);
 }
-const createIndex = (item = {}, index, position) => {
+const createIndex = (item = {}) => {
+      index++
       let style = `position: absolute;color:rgba(0,0,0,0.26);font-weight: 400;font-size: 12px;
-      background: #fff;padding:0 10px;height:18px;line-height:18px;`
-      if (position === 'left') {
+      background: #fff;padding:0 10px;height:18px;`
+      if (_self.position === 'left') {
             style += 'right:0;text-align: right;'
       } else {
             style += 'left:0;'
@@ -219,7 +216,7 @@ const createName = (key = '') => {
       const name = key
       return `<span style="color:rgba(0,0,0,0.6);font-weight: 400;font-size: 12px;">"${name}":</span>`
 }
-const createValue = (val) => `<span style="color:rgba(0,0,0,0.6);font-weight: 400;font-size: 12px;">"${val}"</span>`
+const createValue = (val) => `<span style="color:rgba(0,0,0,0.6);font-weight: 400;font-size: 12px;">"${val || ''}"</span>`
 const addBtn = (key) => `<span style="color:#000;">+</span>`
 const removeBtn = (key) => `<span style="color:#000;">-</span>`
 
@@ -229,13 +226,18 @@ const createUl = () => {
       return ul
 }
 
+const isCurrent = (obj = {}) => {
+      if (isObject(obj)) {
+            return Object.keys(obj).some(t => t.split(":")[1] === _self.position)
+      }
+}
 
 const createLi = (item, status) => {
       const li = document.createElement('li')
       li.style.whiteSpace = 'nowrap'
       li.style.listStyle = 'none'
       li.style.textAlign = 'left'
-      if (status === Status.Update) {
+      if (status === 'update') {
             li.style.background = '#FDECEE'
       }
       if (item === undefined) {
@@ -244,6 +246,35 @@ const createLi = (item, status) => {
       return li
 }
 
+const formatArray1 = (data1, data2, elem1, elem2, maxLength) => {
+      for (let i = 0; i < maxLength; i++) {
+            const item1 = data1[i]
+            const item2 = data2[i]
+            const li1 = createLi(item1);
+            const li2 = createLi(item1);
+            const end = i === maxLength - 1 ? '' : ','
+            if (isArray(item1) && isArray(item2)) {
+                  li1.innerHTML += `[`;
+                  li2.innerHTML += `[`;
+                  if (item1.length > 0) {
+                        const pul1 = createUl();
+                        formatArray1(item1, li1)
+                        li1.appendChild(pul1)
+                  }
+                  li1.innerHTML += `${createIndex(item1)}]${end}`;
+            } else if (isObject(item1)) {
+                  li1.innerHTML += `${createIndex(item1)}{`;
+                  const ul = createUl();
+                  formatJson(item1, ul)
+                  li1.appendChild(ul)
+                  li1.innerHTML += `${createIndex(item1)}}${end}`;
+            } else {
+                  li1.innerHTML += `${createIndex(item1)}${createValue(item1)}${end}`
+            }
+            elem1.appendChild(li1)
+            elem2.appendChild(li)
+      }
+}
 
 const formatArray = (list = [], elem) => {
       list.forEach((item, i, arr) => {
@@ -451,57 +482,24 @@ export const mergeJson = (json1, json2) => {
       console.log(merged)
       return merged;
 }
-//第一个参数是基准参数
-const getStatus = (value1, value2) => {
-      let status = ''
-      if (value1 === undefined && value2 !== undefined) {
-            status = Status.Add
-      }
-      if (value1 !== undefined && value2 === undefined) {
-            status = Status.Delete
-      }
-
-      if (value1 && value2) {
-            if (typeof value1 === 'object' && typeof value2 === 'object') {
-                  if (isArray(value1) && isArray(value2)) {
-                        if (value1.length !== value2.length) {
-                              status = Status.Update
-                        }
-                  }
-                  if (isObject(value1) && isObject(value2)) {
-                        if (value1['paramsKey'] !== value2['paramsKey']) {
-                              status = Status.Add
-                        }
-                  }
-            } else {
-                  if (value1 !== value2) {
-                        status = Status.Update
-                  }
-            }
-      }
-
-      return status
-}
-
-let mergeIndex = 0
 
 export const mergeData = (obj1 = {}, obj2 = {}, dom1, dom2) => {
       const keys = Array.from(new Set(Object.keys(obj1).concat(Object.keys(obj2))));
       keys.forEach((key, index) => {
             const value1 = obj1[key]
             const value2 = obj2[key]
-            mergeIndex++
-            const startLi1 = createLi(value1, getStatus(value1, value2))
-            const startLi2 = createLi(value2, getStatus(value2, value1))
-            startLi1.innerHTML = `${createIndex(value1, mergeIndex,'left')}${createName(key)}:`
-            startLi2.innerHTML = `${createIndex(value2, mergeIndex)}${createName(key)}:`
+
+            const startLi1 = createLi(value1)
+            const startLi2 = createLi(value2)
+            startLi1.innerHTML = `${createName(key)}:`
+            startLi2.innerHTML = `${createName(key)}:`
 
 
             if (typeof value1 === 'object' || typeof value2 === 'object') {
                   const div1 = createUl()
                   const div2 = createUl()
-                  const endLi1 = createLi(value1, getStatus(value1, value2))
-                  const endLi2 = createLi(value2, getStatus(value2, value1))
+                  const endLi1 = createLi(value1)
+                  const endLi2 = createLi(value2)
                   if (isObject(value1) || isObject(value2)) {
                         startLi1.innerHTML += '{'
                         startLi2.innerHTML += '{'
@@ -516,14 +514,6 @@ export const mergeData = (obj1 = {}, obj2 = {}, dom1, dom2) => {
                         dom2.appendChild(endLi2)
                   } else if (isArray(value1) || isArray(value2)) {
                         //数组
-
-                        if (value1?.length === 0 && value2?.length === 0) {
-                              startLi1.innerHTML += '[],'
-                              startLi2.innerHTML += '[],'
-                              dom1.appendChild(startLi1)
-                              dom2.appendChild(startLi2)
-                              return
-                        }
                         const maxLength = Math.max(value1?.length || 0, value2?.length);
                         startLi1.innerHTML += '['
                         startLi2.innerHTML += '['

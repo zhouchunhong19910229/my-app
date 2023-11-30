@@ -1,0 +1,177 @@
+.diff-body {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: 16px;
+
+    .diff-item {
+        width: calc(50% - 10px);
+        height: 100%;
+        text-align: left;
+        position: relative;
+        border: 1px solid #E6E9ED;
+        box-sizing: border-box;
+        flex-direction: column;
+
+        .top-item {
+            height: 40px;
+            display: flex;
+            justify-content: flex-start;
+            width: 100%;
+            border-bottom: 1px solid #E6E9ED;
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.9);
+            align-items: center;
+            box-sizing: border-box;
+            padding-left: 32px;
+        }
+
+        .bottom-item {
+            height: 100%;
+
+            &.showTop {
+                height: calc(100% - 40px);
+            }
+
+            overflow: auto;
+            //overflow-x: hidden;
+            position: relative;
+            box-sizing: border-box;
+            padding: 16px 0;
+
+            /* 设置滚动条样式 */
+            &::-webkit-scrollbar {
+                width: 8px;
+                /* 设置滚动条宽度 */
+                height: 8px;
+                /* 设置滚动条高度 */
+            }
+
+            /* 滚动条背景 */
+            &::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 4px;
+            }
+
+            /* 滚动条滑块 */
+            &::-webkit-scrollbar-thumb {
+                background: rgba(0, 0, 0, 0.26);
+                border-radius: 4px;
+            }
+
+            /* 滚动条滑块悬停 */
+            &::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+        }
+
+        ul,
+        li {
+            list-style: none;
+        }
+
+        &.left .bottom-item>.parent-item {
+            padding-left: 0;
+        }
+
+        &.right .bottom-item {
+            padding-left: 35px !important;
+            box-sizing: border-box;
+        }
+
+        .line {
+            position: absolute;
+            color: rgba(0, 0, 0, 0.26);
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 16px;
+            display: flex;
+            align-items: center;
+            padding: 0 5px;
+            width: 48px;
+            background: #fff;
+            right: 0;
+            text-align: right;
+
+            //border-left: 1px solid;
+            &.left {
+                right: 0;
+                text-align: right;
+                border-left: 1px solid;
+                justify-content: flex-start;
+            }
+
+            &.right {
+                left: 0;
+                border-right: 1px solid;
+                justify-content: flex-end;
+            }
+
+            &.status {
+                background: #FDECEE;
+                color: #E34D59;
+            }
+
+            &:hover {
+                &~.merge-label * {
+                    background: #E34D59;
+                    color: #fff;
+                }
+            }
+        }
+
+        .parent-item {
+            //padding-left: 20px;
+            box-sizing: border-box;
+            white-space: nowrap;
+            background: #fff;
+
+            &.status {
+                background: #FDECEE;
+
+                &* {
+                    background: #FDECEE !important;
+                }
+            }
+
+            .item {
+                padding-left: 32px;
+                box-sizing: border-box;
+                text-align: left;
+                //background: #fff;
+                color: rgba(0, 0, 0, 0.26);
+                white-space: nowrap;
+
+                &.status {
+                    background: #FDECEE;
+
+                    &* {
+                        background: #FDECEE !important;
+                    }
+                }
+            }
+        }
+
+        .merge-name,
+        .merge-value {
+            color: rgba(0, 0, 0, 0.6);
+            font-weight: 400;
+            font-size: 12px;
+        }
+
+        .remove-btn,
+        .merge-btn {
+            display: flex;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .add-btn {
+            color: #e34d59;
+        }
+    }
+}

@@ -1,0 +1,28 @@
+
+{
+    "request": [
+        {
+            "msgStructType": "2",
+            "notShow": true,
+            "msgStructCode": "",
+            "paramKey": "1689671496472_e358bc753fd44f94987e31aa2f88ccde",
+            "msgStructDirection": "2",
+            "children": [],
+            "showParameter": false,
+            "parameter": []
+        }
+    ],
+    "response": [
+        {
+            "msgStructType": "2",
+            "notShow": false,
+            "msgStructCode": "",
+            "paramKey": "1689671496472_995cba567f61417d8d23250261245506",
+            "msgStructDirection": "2",
+            "children": [],
+            "showParameter": false,
+            "parameter": []
+        }
+    ],
+    "msgNo": "1689162309167_4a0c789204484b908a660c1bef97ed62"
+}
