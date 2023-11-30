@@ -46,7 +46,7 @@ export default {
 <template>
     <div class="flex column">
         <div v-if="isBranchNode" class="branch-wrap">
-            <Chart :node="node" v-bind="$attrs" v-on="$listeners" class="top" />
+            <Chart :node="node" v-bind="$attrs" class="top" v-on="$listeners"  />
             <div v-if="isHasBrcnchChilds" class="body">
                 <Child
                     v-for="(item, index) in node.children"
@@ -58,7 +58,7 @@ export default {
             </div>
         </div>
         <div v-else>
-            <Chart v-if="isNormalNode" :node="node" v-bind="$attrs" v-on="$listeners" />
+            <Chart :node="node" v-bind="$attrs" v-on="$listeners" />
             <div v-if="isHasBrcnchChilds" class="flex">
                 <Child
                     v-for="(node, index) in node.children"

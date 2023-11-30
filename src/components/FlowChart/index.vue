@@ -94,7 +94,7 @@ export default {
             this.startNode = nodes.find((t) => t.nodeType === '3');
             this.endNode = nodes.find((t) => t.nodeType === '4');
             this.branchNodeist = nodes.filter((t) => t.nodeType === '2');
-            this.treeNodeIds = processData({ lines, nodes });
+            // this.treeNodeIds = processData({ lines, nodes });
             this.treeDatas = formatNodes({ lines, nodes });
             this.nodes = nodes.map((t) => {
                 const { nodeName, id } = t || {};
@@ -134,14 +134,14 @@ export default {
                 ]
             ];
             return {
-                isSource: false,
-                isTarget: false,
+                isSource: true,
+                isTarget: true,
                 connector: ['Flowchart' /* 'Bezier' */ /*  'StateMachine' */],
                 endpoint: 'Blank',
                 overlays,
                 endpointHoverStyle: { color: '#1D70F5' },
                 renderMode: 'canvas',
-                dragOptions: { cursor: 'pointer', zIndex: 2000 },
+                // dragOptions: { cursor: 'pointer', zIndex: 2000 },
                 hoverPaintStyle: { stroke: 'red', strokeWidth: 3, cursor: 'pointer' },
                 connectorHoverStyle: { stroke: 'red', strokeWidth: 3, cursor: 'pointer' },
                 maxConnections: -1
@@ -152,52 +152,44 @@ export default {
             this.plumbIns.reset();
             this.$nextTick(() => {
                 this.loading = false;
-                this.plumbIns.batch(() => {
-                    this.links?.forEach((line) => {
-                        let defaultConfig = this.getDefaultConfig();
-                        const { source, target, label } = line;
-                        const isFromeBranchLine = this.branchNodeist.find((t) => t.id === source);
-                        const isToBranchLine = this.branchNodeist.find((t) => t.id === target);
-                        // const { id: endNodeId } = this.endNode;
-                        // const isToEndLine = endNodeId === target;
-                        if (label) {
-                            defaultConfig.overlays = [
-                                ...defaultConfig.overlays,
-                                [
-                                    'Label',
-                                    {
-                                        location: 0.5,
-                                        label: `<span class="line-label">${label}</span>`
-                                    }
-                                ]
-                            ];
-                        }
-                        if (isFromeBranchLine) {
-                            defaultConfig.anchor = ['Top', 'Bottom', 'Left', 'Right'];
-                        } else if (isToBranchLine) {
-                            defaultConfig.anchor = ['Top', 'Bottom' /* , 'Left', 'Right' */];
-                            // defaultConfig.anchor = 'Continuous';
-                        }
-                        //if (isToEndLine) {
-                        //     defaultConfig.anchor = [
-                        //         // 'Left',
-                        //         // 'Right',
-                        //         'Top',
-                        //         'Bottom'
-                        //         // [0.5, 1, 0.5, 0]
-                        //         // [0.6, 0, 0, -1],
-                        //         // [0.4, 1, 0, 1],
-                        //         // [0.6, 1, 0, 1]
-                        //     ];
-                        //     // defaultConfig.anchor = 'Continuous'; //动态锚点
-                        // } else {
-                        //     defaultConfig.anchor = ['Top', 'Bottom'];
-                        //     // defaultConfig.anchor = 'Continuous'; //动态锚点
-                        // }
-                        else defaultConfig.anchor = ['Top', 'Bottom'];
-                        this.plumbIns.connect({ ...line, endpoint: 'Rectangle' }, defaultConfig);
-                        this.plumbIns.repaintEverything(); // 重绘
-                    });
+                this.links?.forEach((line) => {
+                    let defaultConfig = this.getDefaultConfig();
+                    const { source, target, label } = line;
+                    const isFromeBranchLine = this.branchNodeist.find((t) => t.id === source);
+                    const isToBranchLine = this.branchNodeist.find((t) => t.id === target);
+                    const { id: endNodeId } = this.endNode;
+                    const isToEndLine = endNodeId === target;
+                    if (label) {
+                        defaultConfig.overlays = [
+                            ...defaultConfig.overlays,
+                            [
+                                'Label',
+                                {
+                                    location: 0.5,
+                                    label: `<span class="line-label">${label}</span>`
+                                }
+                            ]
+                        ];
+                    }
+                    if (isFromeBranchLine) {
+                        defaultConfig.anchor = ['Top', 'Bottom', 'Left', 'Right'];
+                    } else if (isToBranchLine) {
+                        defaultConfig.anchor = ['Top', 'Bottom' /* , 'Left', 'Right' */];
+                        // defaultConfig.anchor = 'Continuous';
+                    } else if (isToEndLine) {
+                        defaultConfig.anchor = [
+                            'Top',
+                            'Bottom'
+                            // [0.5, 1, 0.5, 0]
+                            // [0.6, 0, 0, -1],
+                            // [0.4, 1, 0, 1],
+                            // [0.6, 1, 0, 1]
+                        ];
+                    } else {
+                        defaultConfig.anchor = ['Top', 'Bottom'];
+                    }
+                    this.plumbIns.connect({ ...line, endpoint: 'Rectangle' }, defaultConfig);
+                    this.plumbIns.repaintEverything(); // 重绘
                 });
             });
         },
@@ -289,28 +281,7 @@ export default {
 };
 </script>
 <template>
-    <div ref="content" class="flow_wrap" :class="{ disabled }" :style="style">
-        <!-- <div v-for="(row, index) in treeNodeIds" :key="index" class="row">
-            <Chart
-                v-for="node in row"
-                :key="node"
-                class="cell"
-                :node="node"
-                :isNodeInclude="isNodeInclude"
-                :toBeDeletedOpt="toBeDeletedOpt"
-                :toBeAddedOpt="toBeAddedOpt"
-                @nodeClick="nodeClick"
-            />
-        </div> -->
-        <div v-if="startNode" class="tree-nodes start">
-            <Chart
-                :node="startNode"
-                :isNodeInclude="isNodeInclude"
-                :toBeDeletedOpt="toBeDeletedOpt"
-                :toBeAddedOpt="toBeAddedOpt"
-                @nodeClick="nodeClick"
-            />
-        </div>
+    <div ref="content" class="flow_wrap" :class="{ disabled }">
         <div class="tree-nodes">
             <Child
                 :node="treeDatas"
@@ -319,15 +290,6 @@ export default {
                 :toBeAddedOpt="toBeAddedOpt"
                 @nodeClick="nodeClick"
             ></Child>
-        </div>
-        <div v-if="endNode" class="tree-nodes end">
-            <Chart
-                :node="endNode"
-                :isNodeInclude="isNodeInclude"
-                :toBeDeletedOpt="toBeDeletedOpt"
-                :toBeAddedOpt="toBeAddedOpt"
-                @nodeClick="nodeClick"
-            />
         </div>
         <div v-if="hasNotLineNodes.length > 0" class="tree-nodes notLine">
             <Chart
@@ -346,19 +308,13 @@ export default {
 .flow_wrap {
     display: flex;
     width: 100%;
-    height: 100%;
+    // height: 100%;
     flex-direction: column;
     user-select: none;
     overflow: auto;
+    position: relative;
     .tree-nodes {
         width: 100%;
-        position: relative;
-        &.end,
-        &.start {
-            // margin-top: 50px;
-            display: flex;
-            justify-content: center;
-        }
         &.notLine {
             display: flex;
             .item {

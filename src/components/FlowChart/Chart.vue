@@ -91,11 +91,8 @@ export default {
 };
 </script>
 <template>
-    <div
-        class="item"
-        :class="{ calc: isBranchNode }"
-    >
-        <div v-if="isStartNode || isEndNode" :id="nodeId" class="start">
+    <div class="item" :class="{ calc: isBranchNode }">
+        <div v-if="isStartNode || isEndNode" :id="nodeId" class="node start">
             <div class="text">{{ nodeLabel }}</div>
         </div>
         <div v-else-if="isBranchNode" :id="nodeId" class="branch">
@@ -115,7 +112,6 @@ export default {
             }"
             @click.stop="nodeClick(node)"
         >
-            <!-- <div :id="nodeId" class="point"></div> -->
             <span v-tooltip="nodeLabel" class="label">{{ nodeLabel }}</span>
             <span v-if="nodeStat === '4'" v-tooltip="nodeLabel" class="deal">立即删除</span>
             <span v-else-if="nodeStat === '5'" v-tooltip="nodeLabel" class="deal">立即移除</span>
@@ -132,7 +128,7 @@ export default {
 <style lang="less" scoped>
 .item {
     display: flex;
-    // width: 100%;
+    width: 100%;
     justify-content: space-around;
     // position: relative;
     // z-index: 999;
@@ -153,23 +149,6 @@ export default {
         justify-content: center;
         font-size: 12px;
     }
-    .start {
-        height: 40px;
-        background: #fff;
-        border-radius: 80px;
-        border: 1px solid #1D70F5;
-        display: flex;
-        box-sizing: border-box;
-        width: 120px;
-        align-items: center;
-        justify-content: center;
-        margin: 20px 16px;
-        position: relative;
-        z-index: 1;
-        &:hover{
-            cursor: pointer;
-        }
-    }
     .branch {
         width: 64px;
         height: 64px;
@@ -179,7 +158,7 @@ export default {
             top: 50%;
             transform: rotate(45deg) translate(-50%, -50%);
             transform-origin: 0 0;
-            border: 1px solid #1D70F5;
+            border: 1px solid #1d70f5;
             background: #fff;
             width: 44px;
             height: 44px;
@@ -199,21 +178,18 @@ export default {
         align-items: center;
         justify-content: center;
         margin: 20px 16px;
-        position: relative;
         z-index: -1;
-        .point {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            left: 50%;
-            top: 0;
+        &.start {
+            border-radius: 80px;
+            border-color: #1d70f5;
+            width: 120px;
         }
         &.disabled {
             cursor: not-allowed;
             opacity: 1;
         }
         &.select {
-            border-color: #1D70F5;
+            border-color: #1d70f5;
             background-color: #fff;
         }
         .view {
@@ -230,7 +206,7 @@ export default {
             width: 100%;
             height: 100%;
             white-space: nowrap;
-            // overflow: hidden;
+            overflow: hidden;
             text-overflow: ellipsis;
             line-height: 40px;
             box-sizing: border-box;
@@ -244,7 +220,7 @@ export default {
             right: -9px;
             top: -5px;
             color: #fff;
-            background-color: #1D70F5;
+            background-color: #1d70f5;
             padding: 2px;
             border-radius: 0px 2px 0px 2px;
             font-size: 12px;
@@ -284,8 +260,8 @@ export default {
                 display: none;
             }
             &.is_maintained {
-                border-color: #1D70F5;
-                background-color: #1D70F5;
+                border-color: #1d70f5;
+                background-color: #1d70f5;
                 .label {
                     color: #fff;
                 }
@@ -310,15 +286,15 @@ export default {
             background: #edf4fe;
             border-radius: 3px 3px 3px 3px;
             border: 1px solid #d4e3fc;
-            color: #1D70F5;
+            color: #1d70f5;
             &.select {
-                border-color: #1D70F5 !important;
+                border-color: #1d70f5 !important;
                 &.app {
                     border-color: #07b6d4 !important;
                 }
             }
             .label {
-                color: #1D70F5;
+                color: #1d70f5;
             }
             &:hover {
                 background: #edf4fe !important;
@@ -327,7 +303,7 @@ export default {
                 }
                 .label {
                     display: block;
-                    color: #1D70F5;
+                    color: #1d70f5;
                 }
             }
         }
