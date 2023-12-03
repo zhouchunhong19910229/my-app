@@ -127,6 +127,7 @@ export default {
     </div>
 </template>
 <style lang="less" scoped>
+@theme_color:#1D70F5;
 .z_mask {
     z-index: 2;
 }
@@ -156,7 +157,7 @@ export default {
         height: 40px;
         background: #fff;
         border-radius: 80px;
-        border: 1px solid #1D70F5;
+        border: 1px solid @theme_color;
         display: flex;
         box-sizing: border-box;
         width: 120px;
@@ -175,7 +176,7 @@ export default {
             top: 50%;
             transform: rotate(45deg) translate(-50%, -50%);
             transform-origin: 0 0;
-            border: 1px solid #1D70F5;
+            border: 1px solid @theme_color;
             background: #fff;
             width: 44px;
             height: 44px;
@@ -209,7 +210,7 @@ export default {
             opacity: 1;
         }
         &.select {
-            border-color: #1D70F5;
+            border-color: @theme_color;
             background-color: #fff;
         }
         .view {
@@ -239,7 +240,7 @@ export default {
             right: -9px;
             top: -5px;
             color: #fff;
-            background-color: #1D70F5;
+            background-color: @theme_color;
             padding: 2px;
             border-radius: 0px 2px 0px 2px;
             font-size: 12px;
@@ -279,8 +280,8 @@ export default {
                 display: none;
             }
             &.is_maintained {
-                border-color: #1D70F5;
-                background-color: #1D70F5;
+                border-color: @theme_color;
+                background-color: @theme_color;
                 .label {
                     color: #fff;
                 }
@@ -305,15 +306,15 @@ export default {
             background: #edf4fe;
             border-radius: 3px 3px 3px 3px;
             border: 1px solid #d4e3fc;
-            color: #1D70F5;
+            color: @theme_color;
             &.select {
-                border-color: #1D70F5 !important;
+                border-color: @theme_color !important;
                 &.app {
                     border-color: #07b6d4 !important;
                 }
             }
             .label {
-                color: #1D70F5;
+                color: @theme_color;
             }
             &:hover {
                 background: #edf4fe !important;
@@ -322,7 +323,7 @@ export default {
                 }
                 .label {
                     display: block;
-                    color: #1D70F5;
+                    color: @theme_color;
                 }
             }
         }

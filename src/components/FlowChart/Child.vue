@@ -46,7 +46,7 @@ export default {
 <template>
     <div class="flex column">
         <div v-if="isBranchNode" class="branch-wrap">
-            <Chart :node="node" v-bind="$attrs" class="top" v-on="$listeners"  />
+            <Chart :node="node" v-bind="$attrs" class="top" v-on="$listeners" />
             <div v-if="isHasBrcnchChilds" class="body">
                 <Child
                     v-for="(item, index) in node.children"
@@ -89,7 +89,13 @@ export default {
     }
     .body {
         display: flex;
-        justify-content: space-around;
+        // justify-content: space-around;
+        & > div {
+            margin: 0 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
     }
 }
 </style>

@@ -94,6 +94,7 @@ export default {
                 (t) => !lines.some((l) => [l.from, l.to].includes(t.id))
             );
             this.treeDatas = formatNodes({ lines, nodes });
+            console.log(JSON.stringify(this.treeDatas));
             const { listTask: selects } = listFlow || {};
             // if(this.isApp) {
             //     this.selectList =
@@ -143,10 +144,10 @@ export default {
                 endpoint: 'Blank',
                 overlays,
                 endpointHoverStyle: { color: '#1D70F5' },
-                renderMode: 'canvas',
+                // renderMode: 'canvas',
                 // dragOptions: { cursor: 'pointer', zIndex: 2000 },
                 hoverPaintStyle: { stroke: 'red', strokeWidth: 3, cursor: 'pointer' },
-                connectorHoverStyle: { stroke: 'red' },
+                // connectorHoverStyle: { stroke: 'red' },
                 maxConnections: -1
             };
         },
@@ -175,31 +176,25 @@ export default {
                         ];
                     }
                     if (isFromeBranchLine) {
-                        defaultConfig.anchor = ['Top', 'Bottom', 'Left', 'Right'];
+                        defaultConfig.anchor = ['Top', 'Bottom' /* 'Left', 'Right' */];
                     } else if (isToBranchLine) {
-                        defaultConfig.anchor = 'Continuous';
+                        // defaultConfig.anchor = 'Continuous';
+                        defaultConfig.anchor = ['Top', 'Bottom' /* 'Left', 'Right' */];
                     } else if (isToEndLine) {
                         defaultConfig.anchor = [
-                            // 'Left',
-                            // 'Right',
                             'Top',
                             'Bottom',
-                            [0.5, 1, 0.5, 0]
+                            'Left',
+                            'Right'
                             // [0.6, 0, 0, -1],
                             // [0.4, 1, 0, 1],
                             // [0.6, 1, 0, 1]
                         ];
-                        // defaultConfig.anchor = 'Continuous'; //动态锚点
+                        defaultConfig.anchor = 'Continuous'; //动态锚点
                     } else {
-                        defaultConfig.anchor = [
-                            // 'Left',
-                            // 'Right',
-                            'Top',
-                            'Bottom'
-                            // [0.5, 0, 0, -1]
-                        ];
-                        // defaultConfig.anchor = 'Continuous'; //动态锚点
+                        defaultConfig.anchor = ['Top', 'Bottom'];
                     }
+                    // defaultConfig.anchor = 'Continuous'; //动态锚点
                     // this.plumbIns.draggable(target);
                     this.plumbIns.connect({ ...line, endpoint: 'Rectangle' }, defaultConfig);
                     this.plumbIns.repaintEverything(); // 重绘

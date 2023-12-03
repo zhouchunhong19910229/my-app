@@ -29,7 +29,9 @@
     "less": "^3.0.4",
     "less-loader": "^5.0.0",
     "vue-template-compiler": "^2.6.11",
-    "element-ui": "^2.15.7"
+    "element-ui": "^2.15.7",
+    "vxe-table": "^3.6.9",
+    "xe-utils": "^3.5.7"
   },
   "eslintConfig": {
     "root": true,
