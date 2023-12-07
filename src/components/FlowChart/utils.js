@@ -99,7 +99,3 @@ export function formatNodes(data) {
     excute = null
     return res
 }
-
-export const isBranchNode = (nodeType) => {
-    return Number(nodeType) === 2
-}

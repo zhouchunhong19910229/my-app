@@ -34,7 +34,7 @@ export default {
     },
     computed: {
         style() {
-            return `transform: scale(${this.scale / 100});transform-origin:center 0;`;
+            return `transform: translate(${this.x}px,${this.y}px) scale(${this.scale / 100});transform-origin:center 0;`;
         },
         isApp() {
             return this.type === 'appService';
@@ -49,9 +49,9 @@ export default {
         this.plumbIns = jsPlumb.getInstance();
     },
     mounted() {
-        this.$nextTick(() => {
-            this.$refs.content.onmousedown = this.onMouseDown;
-        });
+        // this.$nextTick(() => {
+        //     this.$refs.content.onmousedown = this.onMouseDown;
+        // });
         window.addEventListener('resize', () => {
             this.drawLine();
         });
@@ -94,7 +94,6 @@ export default {
                 (t) => !lines.some((l) => [l.from, l.to].includes(t.id))
             );
             this.treeDatas = formatNodes({ lines, nodes });
-            console.log(JSON.stringify(this.treeDatas));
             const { listTask: selects } = listFlow || {};
             // if(this.isApp) {
             //     this.selectList =
@@ -257,7 +256,7 @@ export default {
             });
         },
         toBeAddedOpt(item) {
-            this.$confirm('当前数据暂未维护至平台,是否需要添加？', '确定添加吗', {
+            this.$confirm('当前数据已维护至平台,是否添加到服务中？', '确定添加吗', {
                 center: true
             }).then(() => {
                 const { nodeId, type } = item;
@@ -276,7 +275,7 @@ export default {
 };
 </script>
 <template>
-    <div ref="content" class="flow_wrap" :class="{ disabled }" :style="style">
+    <div ref="content" class="flow_wrap" :class="{ disabled }">
         <div class="tree-nodes">
             <Child
                 :node="treeDatas"
@@ -309,7 +308,7 @@ export default {
     user-select: none;
     overflow: auto;
     .tree-nodes {
-        width: 100%;
+        width: fit-content;
         &.notLine {
             display: flex;
             .item {
