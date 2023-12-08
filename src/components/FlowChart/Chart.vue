@@ -1,4 +1,5 @@
 <script>
+import BranchNode from './BranchNode.vue';
 export default {
     name: 'FlowChartItem',
     props: {
@@ -9,6 +10,9 @@ export default {
         isNodeInclude: Function,
         toBeDeletedOpt: Function,
         toBeAddedOpt: Function
+    },
+    components: {
+        BranchNode
     },
     data() {
         return {
@@ -95,10 +99,7 @@ export default {
         <div v-if="isStartNode || isEndNode" :id="nodeId" class="start">
             <div class="text">{{ nodeLabel }}</div>
         </div>
-        <div v-else-if="isBranchNode" :id="nodeId" class="branch">
-            <div class="diamond"></div>
-            <div class="text">{{ nodeLabel }}</div>
-        </div>
+        <BranchNode v-else-if="isBranchNode" :id="nodeId" :node="node" v-bind="$attrs" v-on="$listeners" />
         <div
             v-else
             :id="nodeId"
@@ -112,7 +113,6 @@ export default {
             }"
             @click.stop="nodeClick(node)"
         >
-            <!-- <div :id="nodeId" class="point"></div> -->
             <span v-tooltip="nodeLabel" class="label">{{ nodeLabel }}</span>
             <span v-if="nodeStat === '4'" v-tooltip="nodeLabel" class="deal">立即删除</span>
             <span v-else-if="nodeStat === '5'" v-tooltip="nodeLabel" class="deal">立即移除</span>
@@ -127,7 +127,7 @@ export default {
     </div>
 </template>
 <style lang="less" scoped>
-@theme_color:#1D70F5;
+@theme_color: #1d70f5;
 .z_mask {
     z-index: 2;
 }
@@ -137,6 +137,9 @@ export default {
     justify-content: space-around;
     //position: relative;
     z-index: 999;
+    * {
+        font-size: 12px;
+    }
     &.calc {
         margin: 56px 0;
     }
@@ -166,24 +169,6 @@ export default {
         margin: 20px 16px;
         position: relative;
         z-index: 1;
-    }
-    .branch {
-        width: 64px;
-        height: 64px;
-        position: relative;
-        .diamond {
-            left: 50%;
-            top: 50%;
-            transform: rotate(45deg) translate(-50%, -50%);
-            transform-origin: 0 0;
-            border: 1px solid @theme_color;
-            background: #fff;
-            width: 44px;
-            height: 44px;
-            position: absolute;
-            z-index: 1;
-            box-sizing: border-box;
-        }
     }
     .node {
         height: 40px;

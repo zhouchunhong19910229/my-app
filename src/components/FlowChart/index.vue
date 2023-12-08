@@ -34,7 +34,9 @@ export default {
     },
     computed: {
         style() {
-            return `transform: translate(${this.x}px,${this.y}px) scale(${this.scale / 100});transform-origin:center 0;`;
+            return `transform: translate(${this.x}px,${this.y}px) scale(${
+                this.scale / 100
+            });transform-origin:center 0;`;
         },
         isApp() {
             return this.type === 'appService';
@@ -139,11 +141,11 @@ export default {
             return {
                 isSource: true,
                 isTarget: true,
-                connector: ['Flowchart' /* 'Bezier' */ /*  'StateMachine' */],
+                connector: ['Flowchart', { stub: 0 } /* 'Bezier' */ /*  'StateMachine' */],
                 endpoint: 'Blank',
                 overlays,
                 endpointHoverStyle: { color: '#1D70F5' },
-                // renderMode: 'canvas',
+                renderMode: 'canvas',
                 // dragOptions: { cursor: 'pointer', zIndex: 2000 },
                 hoverPaintStyle: { stroke: 'red', strokeWidth: 3, cursor: 'pointer' },
                 // connectorHoverStyle: { stroke: 'red' },
@@ -182,20 +184,20 @@ export default {
                     } else if (isToEndLine) {
                         defaultConfig.anchor = [
                             'Top',
-                            'Bottom',
-                            'Left',
-                            'Right'
+                            'Bottom'
+                            // 'Left',
+                            // 'Right'
                             // [0.6, 0, 0, -1],
                             // [0.4, 1, 0, 1],
                             // [0.6, 1, 0, 1]
                         ];
-                        defaultConfig.anchor = 'Continuous'; //动态锚点
+                        // defaultConfig.anchor = 'Continuous'; //动态锚点
                     } else {
                         defaultConfig.anchor = ['Top', 'Bottom'];
                     }
-                    // defaultConfig.anchor = 'Continuous'; //动态锚点
+                    defaultConfig.anchor = ['BottomCenter', [0.5, 0, 0, -1]];
                     // this.plumbIns.draggable(target);
-                    this.plumbIns.connect({ ...line, endpoint: 'Rectangle' }, defaultConfig);
+                    this.plumbIns.connect({ ...line /* endpoint: 'Rectangle' */ }, defaultConfig);
                     this.plumbIns.repaintEverything(); // 重绘
                 });
             });
